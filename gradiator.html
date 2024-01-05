@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Gradiator</title>
+	<meta charset="UTF-8" />
+	<script type="text/javascript" src="vec.js"></script>
+	<script type="text/javascript" src="gradiatorLogic.js"></script>
+	<script type="text/javascript" src="gradiatorSvg.js"></script>
+	<style>
+	.probcell{
+		background-color: #afaf00;
+		border: 2px solid #1f1f1f;
+		margin: 5px;
+		padding: 5px;
+	}
+	.probcell:hover{
+		background-color: #ffff7f;
+	}
+
+	.currentProb{
+		border: 3px solid #0000ff;
+	}
+
+	/* Class that prevents text selection by mouse dragging.
+	  The style is not defined by standard, so we'd write down browser-dependent styles for major browsers.
+	  Support by IE11 is somewhat incomplete since Ctrl+A selects the text in elements even with this style. */
+	.noselect{
+		-webkit-touch-callout: none; /* iOS Safari */
+		-webkit-user-select: none;   /* Chrome/Safari/Opera */
+		-khtml-user-select: none;    /* Konqueror */
+		-moz-user-select: none;      /* Firefox */
+		-ms-user-select: none;       /* IE/Edge */
+		user-select: none;           /* non-prefixed version, currently
+									  not supported by any browser */
+	}
+
+	.draggable {
+  		cursor: move;
+	}
+
+	.labelText {
+      font: italic 20px serif;
+    }
+
+	.tickText {
+      font: 12px sans-serif;
+    }
+
+	.result {
+		font: 24px sans-serif;
+	}
+
+	.correct {
+		color: #007f00;
+	}
+
+	.incorrect {
+		color: #7f0000;
+	}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css" integrity="sha384-exe4Ak6B0EoJI0ogGxjJ8rn+RN3ftPnEQrGwX59KTCl5ybGzvHGKjhPKk/KC3abb" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.js" integrity="sha384-OMvkZ24ANLwviZR2lVq8ujbE/bUO8IR1FdBrKLQBI14Gq5Xp/lksIccGkmKL8m+h" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div id="header">
+		<h1>Gradiator with JavaScript</h1>
+	</div>
+	<div id="stageno" style="font-size: 30px; line-height: 200%">Stage:</div>
+	<div id="container" style="position: relative">
+		<svg id="scratch" width="600px" height="400px" style="width: 600px; height: 300px;"></svg>
+		<div style="position: absolute; display: none; text-align: center; width: 600px; top: 400px; font-size: 40px" id="nextstage">
+			<span class="noselect" onclick="nextStage()" style="border: 5px outset #cfcfcf; background-color: #afafaf">Next Stage</span>
+		</div>
+	</div>
+	<h2>Choose the answer:</h2>
+	<div id="problemStatement"></div>
+	<button id="answerButton">Answer</button>
+	<div id="result" class="result"></div>
+	<button id="nextButton" style="display: none;">Next</button>
+	<h2>Debug outputs</h2>
+	<p>Mouse: <span id="mouse"></span></p>
+	<p>Draw Count: <span id="drawcount"></span></p>
+</body>
+</html>
