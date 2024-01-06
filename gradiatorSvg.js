@@ -19,14 +19,15 @@ const handleHeight = 20;
 const majorTickLength = 10;
 const minorTickLength = 5;
 
-function clampValue(y){
-	return Math.max(Math.min(y, barHeight/2), -barHeight/2);
+function clampValue(y, min=-1, max=1){
+	return Math.max(Math.min(y, max), min);
 }
 
 function updateVariableElem(id, value){
 	const varPos = variablePosition(id);
 	const elem = variableElems[id];
-	elem.setAttribute("y", clampValue(value) + varPos[1] - handleHeight/2);
+	const v = game.variables[id];
+	elem.setAttribute("y", clampValue(value * v.scale) * barHeight / 2 + varPos[1] - handleHeight/2);
 }
 
 function variablePosition(i){
@@ -36,17 +37,12 @@ function variablePosition(i){
 
 window.onload = function() {
 	canvas = document.getElementById("scratch");
-	// if ( ! canvas || ! canvas.getContext ) {
-	// 	return false;
-	// }
 	if(!canvas) return false;
 	var rect = canvas.getBoundingClientRect();
 	// IE8 doesn't support Rect.width nor height (nor even canvas)
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
 	game = new GradiatorLogic(updateVariableElem);
-
-	const mouseElement = document.getElementById("mouse");
 
 	// It's tricky to obtain client coordinates of a HTML element.
 	function getOffsetRect(elem){
@@ -68,7 +64,7 @@ window.onload = function() {
 		// For older InternetExplorerS
 		if (!e)	e = window.event;
 
-		var r = getOffsetRect(canvas);
+		const r = getOffsetRect(canvas);
 
 		mouseCenter[0] = e.clientX - r.left;
 		mouseCenter[1] = e.clientY - r.top;
@@ -76,10 +72,12 @@ window.onload = function() {
 		if(mouseDragging && (mouseCenter[0] !== lastMouseCenter[0] || mouseCenter[1] !== lastMouseCenter[1])){
 			lastMouseCenter[0] = mouseCenter[0];
 			lastMouseCenter[1] = mouseCenter[1];
+			const v = game.variables[mouseDragging.varId];
 			const varPos = variablePosition(0);
-			const y = mouseCenter[1] - varPos[1];
-			const clampedY = clampValue(y);
-			mouseDragging.setAttribute("y", clampedY + varPos[1] - handleHeight/2);
+			const y = (mouseCenter[1] - varPos[1]) / (barHeight / 2);
+			const clampedY = clampValue(y) * v.scale;
+			console.log(`clampedY: ${clampedY}`);
+			mouseDragging.setAttribute("y", clampedY / v.scale * barHeight / 2 + varPos[1] - handleHeight/2);
 			game.updateVariable(mouseDragging.varId, clampedY);
 		}
 		e.preventDefault();
@@ -88,7 +86,6 @@ window.onload = function() {
 	canvas.onmousedown = function(evt){
 		if (!evt.target.classList.contains('draggable')) return;
 		mouseDragging = evt.target;
-		mouseElement.innerHTML = "true";
 
 		const r = getOffsetRect(canvas);
 
@@ -98,7 +95,6 @@ window.onload = function() {
 
 	canvas.onmouseup = function(e){
 		mouseDragging = null;
-		mouseElement.innerHTML = "false";
 	};
 
 	var stageno = document.getElementById('stageno');
@@ -162,6 +158,8 @@ function nextStage(stageno){
 		katex.render("\\displaystyle " + game.answers[i], answerTextElem);
 		problemStatementElem.append(answerDivElem);
 	}
+	const resultElem = document.getElementById("result");
+	resultElem.innerHTML = "";
 	const nextButton = document.getElementById("nextButton");
 	nextButton.style.display = "none";
 	draw();
@@ -199,7 +197,7 @@ function draw() {
 			canvas.appendChild(tickElem);
 			if(j % 2 === 0){
 				const tickLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
-				tickLabel.innerHTML = j * 100 / 4;
+				tickLabel.innerHTML = j * v.scale / 2;
 				tickLabel.setAttribute("x", x - barWidth / 2 - majorTickLength - 25);
 				tickLabel.setAttribute("y", y2 + 5);
 				tickLabel.classList = "tickText";

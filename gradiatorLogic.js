@@ -3,10 +3,12 @@ class Variable{
 	name = "";
 	expr = null;
 	value = 0;
+	scale = 1;
 
-	constructor(name, expr=null) {
+	constructor(name, expr=null, scale=1) {
 		this.name = name;
 		this.expr = expr;
+		this.scale = scale;
 	}
 
 	/// Returns true if the graphics need update
@@ -52,16 +54,16 @@ class GradiatorLogic{
 			{
 				variables: () => {
 					this.variables.push(new Variable("x"));
-					this.variables.push(new Variable("y", vars => vars[0] * vars[0] / 10));
+					this.variables.push(new Variable("y", vars => vars[0] * vars[0]));
 				},
 				answers: ["x = y", "y = x^2", "x = y^2", "y = x^{1/2}"],
 				correctAnswer: 1
 			},
 			{
 				variables: () => {
-					this.variables.push(new Variable("theta"));
-					this.variables.push(new Variable("x", vars => Math.cos(vars[0] / 3) * 10));
-					this.variables.push(new Variable("y", vars => Math.sin(vars[0] / 3) * 10));
+					this.variables.push(new Variable("theta", null, 3));
+					this.variables.push(new Variable("x", vars => Math.cos(vars[0])));
+					this.variables.push(new Variable("y", vars => Math.sin(vars[0])));
 				},
 				answers: [
 					"\\theta = \\cos(y), \\theta = \\sin(x)",
@@ -75,7 +77,7 @@ class GradiatorLogic{
 				variables: () => {
 					this.variables.push(new Variable("x"));
 					this.variables.push(new Variable("y"));
-					this.variables.push(new Variable("z", vars => (vars[0] * vars[0] - vars[1] * vars[1]) / 10));
+					this.variables.push(new Variable("z", vars => (vars[0] * vars[0] - vars[1] * vars[1])));
 				},
 				answers: [
 					"x = z^2, y = z^2",
