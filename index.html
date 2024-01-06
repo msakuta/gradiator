@@ -8,13 +8,17 @@
 	<script type="text/javascript" src="gradiatorSvg.js"></script>
 	<style>
 	.probcell{
-		background-color: #afaf00;
+		background-color: #afafaf;
 		border: 2px solid #1f1f1f;
 		margin: 5px;
 		padding: 5px;
 	}
 	.probcell:hover{
-		background-color: #ffff7f;
+		background-color: #efefef;
+	}
+
+	.probcell .cleared:hover{
+		background-color: #efffef;
 	}
 
 	.currentProb{
@@ -56,6 +60,10 @@
 
 	.incorrect {
 		color: #7f0000;
+	}
+
+	.cleared {
+		background-color: #7faf7f;
 	}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css" integrity="sha384-exe4Ak6B0EoJI0ogGxjJ8rn+RN3ftPnEQrGwX59KTCl5ybGzvHGKjhPKk/KC3abb" crossorigin="anonymous">

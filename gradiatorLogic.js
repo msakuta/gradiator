@@ -27,6 +27,7 @@ class GradiatorLogic{
 	maxReflections = 10;
 	answers = [];
 	correctAnswer = -1;
+	stagesCleared = [];
 	updateVariableCallback = () => {};
 	constructor(updateVariableCallback){
 		this.variables = [];
@@ -87,7 +88,9 @@ class GradiatorLogic{
 				],
 				correctAnswer: 2
 			}
-		]
+		];
+
+		this.stagesCleared = this.problems.map(() => false);
 
 		this.currentProblem = -1;
 

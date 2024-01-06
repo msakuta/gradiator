@@ -114,6 +114,8 @@ window.onload = function() {
 	const answerButton = document.getElementById('answerButton');
 	answerButton.addEventListener("click", () => {
 		if(document.getElementById(`answer${game.correctAnswer}`).checked){
+			game.stagesCleared[game.currentProblem] = true;
+			updateStageElems();
 			resultElem.innerHTML = "Correct answer!";
 			resultElem.classList = "result correct";
 			nextButton.style.display = "block";
@@ -132,16 +134,21 @@ window.onload = function() {
 	nextStage(0);
 };
 
+function updateStageElems(){
+	for(let i = 0; i < game.problems.length; i++){
+		const stageNoElem = document.getElementById("stageno" + (i + 1));
+		stageNoElem.className = "noselect " + (i === game.currentProblem ? "probcell currentProb" : "probcell")
+			+ (game.stagesCleared[i] ? " cleared" : "");
+	}
+}
+
 function nextStage(stageno){
 	if(stageno !== undefined)
 		game.currentProblem = stageno - 1;
 	game.nextProblem();
-	var nextStageElem = document.getElementById("nextstage");
+	const nextStageElem = document.getElementById("nextstage");
 	nextStageElem.style.display = "none";
-	for(var i = 0; i < game.problems.length; i++){
-		var stageNoElem = document.getElementById("stageno" + (i + 1));
-		stageNoElem.className = "noselect " + (i === game.currentProblem ? "probcell currentProb" : "probcell");
-	}
+	updateStageElems();
 	const problemStatementElem = document.getElementById("problemStatement");
 	while(problemStatementElem.firstChild) problemStatementElem.removeChild(problemStatementElem.firstChild);
 	for(let i = 0; i < game.answers.length; i++){
